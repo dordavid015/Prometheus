@@ -1,0 +1,3 @@
+1. Creating Prometheus.yaml
+
+2. docker run -d /path/to/promethues.yaml:/etc/prometheus/prometheus.yml -p 9090:9090 prom/prometheus

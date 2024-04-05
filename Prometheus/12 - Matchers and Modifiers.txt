@@ -1,0 +1,44 @@
+Matchers:
+
+OR 
+
+node_cpu_seconds_total{job="web",cpu="0", mode=~"user|system"}
+
+
+we can filter out the time series that get returned by using filter matches:
+
+- Equality -> =
+    node_filesystem_avail_bytes{instance="node01"}
+
+- Negative Equality -> !=
+        node_filesystem_avail_bytes{instance!="node01"}
+
+- Regular expression matcher -> =~
+        node_filesystem_avail_bytes{device=~"/dev/sda.*"}
+
+- Negative regular expression -> !~
+    node_filesystem_avail_bytes{mountpoint!~"/boot.*"}
+
+we can using few selector in a query:
+    node_filesystem_avail_bytes{instance="node01", device!~"/dev/sda.*"}
+
+
+
+
+
+Modifier:
+
+how to get historic data use an offset modifier after the label matching?
+    node_filesystem_avail_bytes{mountpoint!~"/boot.*"} offset 5m
+
+    - ms -> miliseconds
+    - s -> seconds
+    - m -> Minutes
+    - h -> hours
+    - d -> days
+    - w -> week
+    - y -> year
+
+to go back to a specific point in time we can use the "@ modifier"
+    node_filesystem_avail_bytes{mountpoint!~"/boot.*"} @1763265188
+

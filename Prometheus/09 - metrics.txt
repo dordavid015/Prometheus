@@ -1,0 +1,42 @@
+Prometheus metrics seems to be like that:
+
+<metric_name> [{<label_1="value_1">,<label_2="value2">}] <metric_value>
+    node_cpu_seconds_total{cpu="0",mode="idle"} 258277.86
+    node_cpu_seconds_total{cpu="1",mode="idle"} 25023.77
+    node_cpu_seconds_total{cpu="2",mode="idle"} 248244.36
+    node_cpu_seconds_total{cpu="3",mode="idle"} 282977.22
+
+when prometheus scarpes a target it also stores the time at which the metric was scraped as well
+the timestamp is a unix timestnap - epoch (number of second that have elapsed since jan 1 1970)
+
+Every metric has 2 attributes:
+    Help - description of what the metric is
+    Tyoe: what type of prometheus metric this is
+
+
+Metric Types:
+
+    1. counter - how many times did X happend. number can only increase
+        mesauring total request / total job-executions / total errors
+
+    2. Gauge - what is the current value of X - can go up or down
+        Current cpu utillzation / Available system Memory
+
+    3. Histogram - how long or how big something is.
+       it allows us to group observations into configurable bucket sizes.
+       Displyaing Response time by configure buckets:
+        - < 1s
+        - < 0.5s
+        - < 0.2s
+        request size by configure buckets:
+        - < 1500 Mb
+        - < 1000 Mb
+        - < 800 Mb
+
+    4. Summry - Similar to histograms - how many observations fell below x
+       Displyaing Response time by percents:
+        - 20% = 0.3s
+        - 50% = 0.8s
+        - 80% = 1s
+
+

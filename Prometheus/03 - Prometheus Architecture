@@ -1,0 +1,23 @@
+There 3 main part in Prometheus architecture:
+
+1. Data retrivel metrics - responsible to collect the metrics from the targets.
+   send http requests out to all targets in order to collect data
+2. TSDB - time series database - where we store all metrics.
+3. HTTP Server - Prometheus GUI (Designed for user's used)
+
+
+Data Retrivel:
+- The data-retrivel-component pull metrics from targets or from the pushgateway.
+the pushgateway collecting data from short-live-jobs (cron-jobs which run in specific time and disapper after it done)
+
+Service Discovery:
+- Service Discovery - Prometheus enable us to collect targets by using service discovery - providing dynamic list of targets to scrape.
+
+AlertManager:
+- AlertManager - enable us to trigger alerts to uniqes destinations by using specific rules.
+
+GUI:
+- Prometheus webUi / grafana - visualize our data by using special graphs.
+
+Exporters:
+- collect metrics from specific targets and exposed it in special prometheus format.

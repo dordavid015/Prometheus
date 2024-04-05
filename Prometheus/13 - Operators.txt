@@ -1,0 +1,70 @@
+Operators:
+    - Arithmetic operators: +,-,*,/,%,^
+    - Logical operators: OR/AND/UNLESS
+        1. node_filesystem_availe_bytes{device="/dev/sda2"} < 3000 and  node_filesystem_avail_bytes{device="/dev/sda2"} > 1000 --> 1000<x<3000
+        2. node_filesystem_availe_bytes{device="/dev/sda2"} > 5000  or node_filesystem_avail_bytes{device="/dev/sda2"} < 1000  --> x<1000 + x>5000
+        3. node_filesystem_availe_bytes{device="/dev/sda2"} > 1000 unless  node_filesystem_avail_bytes{device="/dev/sda2"} > 3000    1000<x<2999.9999999 
+    - Comparsion operators: ==, !==,>,<,>=,<=
+    - Bool operator: Boolean operators: 0 -> False | 1 -> True
+        node_filesystem_avail_bytes{device="/dev/sda2"} < bool 1000
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node1} 0
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node2} 1
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node3} 0
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node4} 1
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node5} 0
+        
+
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        !!! TRUE / FALSE FOR MONITORING !!!
+        let assume that we want to monitor the size of all our file systems.
+        we can using the query: 
+                                node_filesystem_avail_bytes < bool 1000
+        and fire alerts for each filesystem which has a value of 1
+                node_filesystem_availe_bytes{instance=node1} < bool 1000
+            node_filesystem_availe_bytes{device="/dev/sda1", instance=node1} 0
+            node_filesystem_availe_bytes{device="/dev/sda2", instance=node1} 1
+            node_filesystem_availe_bytes{device="/dev/sda3", instance=node1} 0
+            node_filesystem_availe_bytes{device="/dev/sda4", instance=node1} 1
+            node_filesystem_availe_bytes{device="/dev/sda5", instance=node1} 0
+
+Vector Matching:
+
+we can also do operations between 2 similar instant vector:
+    similar instant vector means that both have the same labels!
+        if we want to display the available of filesystem in perecnt:
+            node_filesystem_available_bytes/node_filesystem_size_bytes * 100  
+
+
+
+                            UNMATCHE LABELS
+lets assume that we want to calculate the rate between http_errors_total and http_request_total:
+    - http_total_error (error="400", instance="192.168.1.168:8000" ,job="api", path="/cars")
+    - http_request_total (instance="192.168.1.168:8000" ,job="api", path="/cars")
+        
+            http_total_error / http_request_total -> return nothing! ERROR!
+                                        |   
+                                        |
+                                        V
+            http_errors_total / ignoring(error) http_request_total
+
+                                        OR
+            http_errors_total / on (instance,job,path) http_request_total
+                        
+
+
+
+
+                                    ONE TO MANY:
+            
+   - http_total_error:
+            - (error="400", instance="192.168.1.168:8000" ,job="api", path="/cars")
+            - (error="500", instance="192.168.1.168:8000" ,job="api", path="/cars")
+
+    - http_request_total (instance="192.168.1.168:8000" ,job="api", path="/cars")
+        
+            http_errors_total / ignoring(error) http_request_total -> return nothing! ERROR!
+
+            Many to 1 ----> group_left
+            1 to many ----> group_right
+
+             http_errors_total / ignoring(error) group_left http_request_total

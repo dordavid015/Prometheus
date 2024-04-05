@@ -1,0 +1,27 @@
+node_cpu_second_total
+{cpu="0",mode="idle"} 115.12
+{cpu="0",mode="irq"} 87.8
+{cpu="0",mode="steal"} 44.5
+
+1. ceil(node_cpu_second_total)
+{cpu="0",mode="idle"} 116
+{cpu="0",mode="irq"} 88
+{cpu="0",mode="steal"} 45
+
+2. floor(node_cpu_second_total)
+{cpu="0",mode="idle"} 115
+{cpu="0",mode="irq"} 87
+{cpu="0",mode="steal"} 44
+
+
+3. Scalar - Given a single element input vector, scalar fucntion return the sample
+value of the single element as a scalar.
+if the input vector doesn't have exactly one element - it returns a NaN
+
+process_start_time_second
+ process_start_time_second{instance="node1"} 1662763800
+
+scalar(process_start_time_second) 1662763800
+
+4. sort (node_filesystme_avail_bytes) -> elements can be sorted with sort and sort_desc
+

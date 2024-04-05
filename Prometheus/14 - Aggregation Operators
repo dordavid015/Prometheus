@@ -1,0 +1,45 @@
+lets seratch the metric http_request:
+
+    http_request{method="get", path="/oauth"} 3
+    http_request{method="post",path="/oauth"} 4
+    http_request{method="get", path="/users"} 5
+    http_request{method="post",path="/users"} 6
+    http_request{method="get", path="/otask"} 7
+    http_request{method="post",path="/otask"} 8 
+    http_request{method="get", path="/admin"} 9 
+    http_request{method="post",path="/admin"} 10
+
+    sum(http_request) = 3+4+5+6+...+10
+    max(http_request) = 10
+    avg(http_request) = (3+4+5+6+...+10)/8
+
+
+by -> which labels to aggregat along:
+    sum by (path) (http_request)
+        {path=/"oauth"} 7
+        {path=/"users"} 11
+        {path=/"otask"} 15
+        {path=/"admin"} 19
+    
+
+without -> which labels not to include in the aggregation:
+
+    http_request{method="get", path="/oauth", instance="server1"} 3
+    http_request{method="post",path="/oauth", instance="server2"} 4
+    http_request{method="get", path="/users", instance="server3"} 5
+    http_request{method="post",path="/users", instance="server1"} 6
+    http_request{method="get", path="/otask", instance="server2"} 7
+    http_request{method="post",path="/otask", instance="server3"} 8 
+    http_request{method="get", path="/admin", instance="server1"} 9 
+    http_request{method="post",path="/admin", instance="server2"} 10
+
+       sum without (instance) (http_request)
+        {path=/"oauth"} 7
+        {path=/"users"} 11
+        {path=/"otask"} 15
+        {path=/"admin"} 19
+
+
+
+sum by (instance) (node_cpu_Seconds_total)
+sum by (instance,cpu) (node_cpu_Seconds_total)

@@ -1,0 +1,74 @@
+### Create a System User for Prometheus ###
+
+    sudo useradd --no-create-home --shell /bin/false prometheus
+
+### Create Directories for Prometheus ###
+
+    sudo mkdir /etc/prometheus
+    sudo mkdir /var/lib/prometheus
+
+### Download Prometheus and Extract Files ###
+
+    wget https://github.com/prometheus/prometheus/releases/download/v2.43.0/prometheus-2.43.0.linux-amd64.tar.gz
+    tar vxf prometheus*.tar.gz
+
+### Navigate to the Prometheus Directory ###
+
+    cd prometheus*/
+
+### Move the Binary Files & Set Owner ###
+
+    sudo mv prometheus /usr/local/bin
+    sudo mv promtool /usr/local/bin
+    sudo chown prometheus:prometheus /usr/local/bin/prometheus
+    sudo chown prometheus:prometheus /usr/local/bin/promtool
+
+### Move the Configuration Files & Set Owner ###
+
+    sudo mv consoles /etc/prometheus
+    sudo mv console_libraries /etc/prometheus
+    sudo mv prometheus.yml /etc/prometheus
+
+    sudo chown prometheus:prometheus /etc/prometheus
+    sudo chown -R prometheus:prometheus /etc/prometheus/consoles
+    sudo chown -R prometheus:prometheus /etc/prometheus/console_libraries
+    sudo chown -R prometheus:prometheus /var/lib/prometheus
+
+### Create Prometheus Systemd Service ###
+
+    sudo vim /etc/systemd/system/prometheus.service
+
+    [Unit]
+    Description=Prometheus
+    Wants=network-online.target # Start service after network is up
+    After=network-online.target # Start service after network is up
+
+    [Service]
+    User=prometheus
+    Group=prometheus
+    Type=simple
+    ExecStart=/usr/local/bin/prometheus \
+    --config.file /etc/prometheus/prometheus.yml \
+    --storage.tsdb.path /var/lib/prometheus/ \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.console.libraries=/etc/prometheus/console_libraries
+
+    [Install]
+    WantedBy=multi-user.target # start of the service as part of normal system start-up
+
+
+### Reload Systemd ###
+
+    sudo systemctl daemon-reload
+
+
+### Start Prometheus Service ###
+
+    sudo systemctl enable prometheus
+    sudo systemctl start prometheus
+    sudo systemctl status prometheus
+
+
+
+
+

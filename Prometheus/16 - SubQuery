@@ -1,0 +1,9 @@
+maximum value over a 10m of gauge metric:
+
+    max_over_time(node_filesystem_avail_bytes)
+
+
+For counter metrics: maximum value over a 10m of rate over the past 
+minutes:
+
+    max_over_time(rate(http_requests_total[10m])[1d:30s])

@@ -1,0 +1,9 @@
+Prometheus is a open-source monitoring tool that collects metrics data that provide tools to visualize the collected data.
+Prometheus allows you to generate alerts when metrics reach a user specified threshold
+
+Prometheus collects metrics bu scraping targets who expose metrics through an http endpoint.
+
+the scraped metrics stored in a time-series-database which can be queried using promql.
+
+prometheus is designed to monitor time-series data that is numeric.
+

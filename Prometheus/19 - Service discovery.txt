@@ -1,0 +1,36 @@
+why do we need service discovery?
+
+    we dont want to update manually the prometheus.yaml file every time we want to scrape new target!
+    if we want to add/remove new target - we want that the file will dynamically updated as a new endpoimt will created and destoryed!
+
+prometheus has built-in support for serval service discovery mechanisms!
+
+
+File-Service-Discovery:
+    a list of jobs/targets can be imported from a file this allows you
+    to integrate with service discovery systems prometheus doesnt support out of the box
+    supports json and yaml files
+
+
+
+1. vim prometheus.yaml:
+
+scrape_configs:
+- job_name: 'node'
+  file_sd_configs:
+  - files:
+    - 'targets.json'
+
+2.Now create that targets.json file and add this content to it:
+               
+                target.json
+[
+  {
+    "targets": ["localhost:9100"],
+    "labels": {
+        "job": "node",
+        "team:" "paas"
+        }
+  }
+]
+

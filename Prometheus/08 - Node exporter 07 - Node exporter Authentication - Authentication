@@ -1,0 +1,21 @@
+Authentication:
+
+
+htpasswd -nBC 12 "" | tr -d ':\n'
+  New password:
+  re-type new password:
+  $2yklklkl43253352k93jd0332lcxhuit483902
+
+when you have the hash - edit your node-exproter config.yml:
+    basic_auth_users:
+##     $user: $password
+        prometheus:  $2yklklkl43253352k93jd0332lcxhuit483902
+
+restart node_exporter service
+
+edit your prometheus job:
+    basic_auth:
+        username: prometheus
+        password: plain-text-password
+
+restart Prometheus service
